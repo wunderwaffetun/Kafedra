@@ -1,0 +1,72 @@
+{
+  "name": "vuc_mai",
+  "productName": "ВУЦ МАИ",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "build": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "33.2.0"
+  },
+  "keywords": [],
+  "author": {
+    "name": "wundervaffetun",
+    "email": "egor.kor013000@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "docx": "^9.0.3",
+    "electron-squirrel-startup": "^1.0.1",
+    "fs": "^0.0.1-security",
+    "mammoth": "^1.8.0",
+    "xlsx": "^0.18.5"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "src/MAI_logo_contour_color.ico",
+        "extraResources": [
+          "src/files/DB",
+          {
+            "from": "src/Администрирование/Инструкция.docx",
+            "to": "Администрирование/Инструкция.docx"
+          },
+          {
+            "from": "src/Администрирование/Варианты местонахождения анкеты.docx",
+            "to": "Администрирование/Варианты местонахождения анкеты.docx"
+          },
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ВУЦ МАИ",
+            "icon": "src/MAI_logo_contour_color.ico"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "config": {
+            "platform": "win32",
+            "icon": "src/MAI_logo_contour_color.ico"
+          }
+        }
+      ]
+    }
+  }
+}
