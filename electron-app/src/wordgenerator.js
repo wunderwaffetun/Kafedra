@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { app, ipcRenderer } = require('electron');
 const {
   Document,
   Packer,
@@ -14,14 +15,15 @@ const {
 
 
 // Определяем путь для сохранения в зависимости от того, упаковано приложение или нет
-let outputPath;
 
-// Если приложение упаковано, путь будет рядом с .exe
-if (app.isPackaged) {
-  outputPath = path.join(path.dirname(process.execPath), 'output'); // Папка рядом с .exe
-} else {
-  // Для режима разработки сохраняем в src или любую другую директорию
-  outputPath = path.join(__dirname, 'files', 'output');
+async function getOutputPathInfo() {
+  try {
+    const outputInfo = await ipcRenderer.invoke('get-output-path-info'); // Получаем путь от главного процесса
+    return outputInfo;
+  } catch (error) {
+    console.error("Ошибка при получении пути для сохранения:", error);
+    return null;
+  }
 }
 
 
@@ -67,12 +69,13 @@ function createNewDoc(allRows) { // Создание документа кажд
 }
 
 async function saveFile(fileName, doc, timestamp) {
-  const outputPath = path.join(__dirname, "..", "files", "output", timestamp, fileName);
+  const outputInfo = await getOutputPathInfo()
+  const resPath = path.join(outputInfo.path, 'output', timestamp, fileName);
     try {
       const buffer = await Packer.toBuffer(doc);
-      fs.writeFileSync(outputPath, buffer);
-      console.log(`Документ успешно сохранён: ${outputPath}`);
-      return outputPath;
+      fs.writeFileSync(resPath, buffer);
+      console.log(`Документ успешно сохранён: ${resPath}`);
+      return resPath;
     } catch (err) {
       console.error("Ошибка при сохранении документа:", err);
       throw err;
@@ -80,6 +83,7 @@ async function saveFile(fileName, doc, timestamp) {
 }
 
 const createWordDocs = async (data, docsNeeded) => {
+  const outputInfo = await getOutputPathInfo()
   const now = new Date(); // Генерация папки с временем создания
   const timestamp = `${now.getFullYear()}-${(now.getMonth() + 1)
     .toString()
@@ -88,7 +92,7 @@ const createWordDocs = async (data, docsNeeded) => {
     .toString()
     .padStart(2, "0")}-${now.getMinutes().toString().padStart(2, "0")}`;
 
-  const dynamicFolderPath = path.join(__dirname, "..", "files", "output", timestamp);
+  const dynamicFolderPath = path.join(outputInfo.path, 'output', timestamp);
 
   
 

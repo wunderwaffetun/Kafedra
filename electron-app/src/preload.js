@@ -1,11 +1,20 @@
 const { contextBridge, shell, ipcRenderer } = require('electron')
-const { generateWordTable, createWordDocs } = require("./generateWord/wordgenerator");
+const { generateWordTable, createWordDocs } = require("./wordgenerator");
 const path = require('path')
 const mammoth = require('mammoth')
 const fs = require('fs')
 const xlsx = require('xlsx');
-const { electron } = require('process');
 
+
+async function getOutputPathInfo() {
+  try {
+    const outputInfo = await ipcRenderer.invoke('get-output-path-info'); // Получаем путь от главного процесса
+    return outputInfo;
+  } catch (error) {
+    console.error("Ошибка при получении пути для сохранения:", error);
+    return null;
+  }
+}
 
 
 
@@ -39,7 +48,11 @@ const saveExcelData = (filename, data) => {
 }
 
 const extractQuestionnairePlaces = async ( filename ) => { // загрузить данные о возожных местах расположения анкеты в React
-  const filePath = path.join(__dirname, 'Администрирование', filename)
+  const outputInfo = await getOutputPathInfo() 
+    filePath = path.join(__dirname, 'files', 'Администрирование', filename)
+    if (outputInfo.isPackaged) {
+      filePath = path.join(outputInfo.path, 'Администрирование', filename)
+    }
   if (!fs.existsSync(filePath)) {
     return [];
   }
@@ -55,7 +68,6 @@ const extractQuestionnairePlaces = async ( filename ) => { // загрузить
 }
 
 contextBridge.exposeInMainWorld('electron', {
-
   getExcelData: (filename) => {
     try {
       const workbook = xlsx.readFile(path.join(__dirname, 'files\\' + filename));
@@ -83,8 +95,12 @@ contextBridge.exposeInMainWorld('electron', {
     }
   },
 
-  openWordFile: (filename) => {
-    filePath = path.join(__dirname, 'Администрирование', filename)
+  openWordFile:  async (filename) => {
+    const outputInfo = await getOutputPathInfo() 
+    filePath = path.join(__dirname, 'files', 'Администрирование', filename)
+    if (outputInfo.isPackaged) {
+      filePath = path.join(outputInfo.path, 'Администрирование', filename)
+    }
     try {
       shell.openPath(filePath)
       return true
@@ -105,6 +121,11 @@ contextBridge.exposeInMainWorld('electron', {
     }
   }
 })
+
+
+// "extraResources": [
+//   "src/files/DB"
+// ],
 
 // (async () => {
 //   try {
