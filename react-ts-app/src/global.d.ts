@@ -7,7 +7,7 @@ interface Window {
     getExcelData: (filename: string) => Promise<any[][]>
     saveExcelData: (filename: string, data: TableRow[]) => Promise<boolean>
     // generateWordTable: (groups: Array, outputFilename: string) => Promise<String>
-    createWordDocs: (data: TableRow[], docsNeeded: {[key: string]: boolean}) => Promise<boolean>
+    createWordDocs: (data: TableRow[], docsNeeded: {[key: string]: boolean}) => Promise<string>
     openWordFile: (filename: string) => Promise<boolean>
     backUpAndExit: (time: string, data: TableRow[]) => Promise<boolean>
     extractQuestionnairePlaces: (filename: string) => Promise<string[]>

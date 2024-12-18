@@ -40,7 +40,7 @@ export const useElectronAPI = (): {
   handleOpenWordFile: (filename: string) => Promise<boolean>;
   backUpAndExit: (data: TableRow[]) => Promise<boolean>;
   // writeListOfLeaked: (data: TableRow[]) => Promise<void>;
-  createWordDocs: (data: TableRow[], docsNeeded: {[key: string]: boolean}) => Promise<boolean>; 
+  createWordDocs: (data: TableRow[], docsNeeded: {[key: string]: boolean}) => Promise<string>; 
   extractQuestionnairePlaces: (filname: string) => Promise<string[]>
 } => {
   const [isElectronAvailable, setIsElectronAvailable] = useState(false);
@@ -51,24 +51,24 @@ export const useElectronAPI = (): {
 
   
 
-  const handleSaveData = async (filename: string, data: TableRow[]): Promise<boolean> => {
+  const handleSaveData = async (filename: string, data: TableRow[]) => {
     return await window.electron.saveExcelData(filename, dataFormatToSave(data));
   };
 
-  const handleOpenWordFile = async (filename: string): Promise<boolean> => {
+  const handleOpenWordFile = async (filename: string) => {
     return window.electron.openWordFile(filename)
   }
 
-  const backUpAndExit = async (data: TableRow[]): Promise<boolean> => {
+  const backUpAndExit = async (data: TableRow[]) => {
     return window.electron.backUpAndExit(getNow(), dataFormatToSave(data))
   }
 
-  const createWordDocs = async (data: TableRow[], docsNeeded: {[key: string]: boolean}): Promise<boolean> => {
+  const createWordDocs = async (data: TableRow[], docsNeeded: {[key: string]: boolean}) => {
     console.log(data)
     return window.electron.createWordDocs(data, docsNeeded)
   }
 
-  const extractQuestionnairePlaces = async (filename: string): Promise<string[]> => {
+  const extractQuestionnairePlaces = async (filename: string) => {
     return window.electron.extractQuestionnairePlaces(filename)
   }
 

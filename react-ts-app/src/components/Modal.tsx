@@ -17,34 +17,29 @@ const checkboxInitial: CheckBoxes = {
   "Список должников": false, 
   "Список студентов с двойным граждантсвом": false, 
   "Список в алфавитном порядке": false, 
-  "Список по группам": false, // В отдельных листах 
-  "Список по группам в алфавитном порядке": false, 
   "Список студентов с оформленным допуском": false
 }
 
 
-
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, data }) => {
   const [checkBoxes, setCheckBoxes ] = useState<CheckBoxes>(checkboxInitial)
-  const { createWordDocs } = useElectronAPI()
+  const { createWordDocs, handleOpenWordFile } = useElectronAPI()
   
 
-  const handleExport = (): void => {
-    createWordDocs(data, checkBoxes)
-    // if (checkBoxes["Список должников"]) {
-    //   writeListOfLeaked(data)
-    // }
-    // if (checkBoxes["Список студентов с двойным граждантсвом"]) {
-      
-    // }
-    // if (checkBoxes["Список в алфавитном порядке"]) {
-    // }
-    // if (checkBoxes["Список по группам"]) {
-    // }
-    // if (checkBoxes["Список по группам в алфавитном порядке"]) {
-    // }
-    // if (checkBoxes["Список студентов с оформленным допуском"]) {
-    // }
+  const handleExport = async (): Promise<void> => {
+    console.log('1')
+    const result = await createWordDocs(data, checkBoxes)
+    const dirpath = result.split("\\").at(-1)
+    console.log('2')
+
+    Object.entries(checkBoxes).forEach( (checkBox) => {
+      const [key, value] = checkBox; 
+      if(value) {
+        handleOpenWordFile(`../output/${dirpath}/${key}.docx`)
+      }
+    } )
+    console.log('3')
+
   }
 
   const handleSelectAll = () => {

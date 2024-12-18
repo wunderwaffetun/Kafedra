@@ -1,6 +1,7 @@
 const { app, Tray, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const xlsx = require('xlsx');
+require('dotenv').config();
 // tree /F
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -23,20 +24,15 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  // mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
 
-  mainWindow.loadURL('http://localhost:8080')
+  // mainWindow.loadURL('http://localhost:8080')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 };
 
-const headers = [
-  '№ п/п', 'ФИО', 'Моб. телефон',
-  'Взвод', 'Учебная группа', 'Ответственный оффицер',
-  'Кафедра', 'Местонахождение анкеты', 'Примечание',
-  'Признак двойного гражданства', 'Допуск оформлен',
-];
+const headers = process.env.HEADERS ? process.env.HEADERS.split(',') : [];
 
 ipcMain.handle('get-output-path-info', () => { // куда буду сохранять данные в зависимости от: в разработке или в сборке 
   let outputPath;

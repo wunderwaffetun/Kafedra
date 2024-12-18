@@ -4,6 +4,8 @@ const path = require('path')
 const mammoth = require('mammoth')
 const fs = require('fs')
 const xlsx = require('xlsx');
+require('dotenv').config();
+
 
 
 async function getOutputPathInfo() {
@@ -25,11 +27,8 @@ const saveExcelData = (filename, data) => {
     const sheetName = workbook.SheetNames[0]
 
     // Первая строка — это заголовки, а все остальные данные — это данные
-    const headers = ['№ п/п', 'ФИО', 'Моб. телефон', 
-      'Взвод', 'Учебная группа', 'Ответственный оффицер', 
-      'Кафедра', 'Местонахождение анкеты', 'Примечание', 
-      'Признак двойного гражданства', 'Допуск оформлен'
-    ]
+    const headers = process.env.HEADERS ? process.env.HEADERS.split(',') : [];
+
     const dataWithHeaders = [headers,  ...data]
 
     // Создаем новый лист с данными и заголовками
@@ -97,7 +96,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   openWordFile:  async (filename) => {
     const outputInfo = await getOutputPathInfo() 
-    filePath = path.join(__dirname, 'files', 'Администрирование', filename)
+    let filePath = path.join(__dirname, 'files', 'Администрирование', filename)
     if (outputInfo.isPackaged) {
       filePath = path.join(outputInfo.path, 'Администрирование', filename)
     }

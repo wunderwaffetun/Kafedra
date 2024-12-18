@@ -1,14 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import { TableRow } from '../types';
 
-export const Searcher: React.FC<{data: TableRow[], setData: (data: TableRow[])=> void, startData: TableRow[]}> = ({data, setData, startData}) => {
+interface props {
+  data: TableRow[], 
+  setData: (data: TableRow[])=> void, 
+  startData: TableRow[], 
+  searcherSaveRef: React.MutableRefObject<string>
+} 
+
+export const Searcher: React.FC<props> = ({data, setData, startData, searcherSaveRef}) => {
   const [value, setValue] = useState<string>('')
-  
+
+  useEffect(() => {
+    if (searcherSaveRef.current) {
+      setValue(searcherSaveRef.current)
+    }
+  }, [])
 
   const searcherHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
-    
   }
 
   useEffect(() => {
@@ -17,6 +28,7 @@ export const Searcher: React.FC<{data: TableRow[], setData: (data: TableRow[])=>
       item.note.join(',').toLowerCase().includes(value.toLocaleLowerCase()) ||
       item.squad.toLowerCase().includes(value.toLocaleLowerCase())
     );
+    searcherSaveRef.current = value
     setData(filteredData); 
   }, [value])
 

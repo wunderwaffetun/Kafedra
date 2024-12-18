@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "docx": "^9.0.3",
+    "dotenv": "^16.4.7",
     "electron-squirrel-startup": "^1.0.1",
     "fs": "^0.0.1-security",
     "mammoth": "^1.8.0",
@@ -37,22 +38,22 @@
     }
   },
   "config": {
-  "forge": {
-    "packagerConfig": {
-      "icon": "C:/Users/EGOR/Desktop/electronReactTest/electron-app/src/MAI_logo_contour_color.ico"
-    },
-    "makers": [
-      {
-        "name": "@electron-forge/maker-squirrel",
-        "config": {
-          "name": "vuc_mai",
-          "setupIcon": "./src/MAI_logo_contour_color.ico",
-          "authors": "Ваше имя или название компании",  
-          "description": "Описание вашего приложения",
-          "version": "1.0.0"
+    "forge": {
+      "packagerConfig": {
+        "icon": "C:/Users/EGOR/Desktop/electronReactTest/electron-app/src/MAI_logo_contour_color.ico"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "vuc_mai",
+            "setupIcon": "./src/MAI_logo_contour_color.ico",
+            "authors": "Ваше имя или название компании",
+            "description": "Описание вашего приложения",
+            "version": "1.0.0"
+          }
         }
-      }
-    ]
+      ]
+    }
   }
-}
 }

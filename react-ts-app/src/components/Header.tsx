@@ -8,21 +8,22 @@ interface Header {
   setData: React.Dispatch<React.SetStateAction<TableRow[]>>,
   startData: React.RefObject<TableRow[]>,
   handleOpenModal: () => void,
-  editedRow: TableRow | null
+  editedRow: TableRow | null,
+  searcherSaveRef: React.MutableRefObject<string>
 }
 
 
 
-export const Header: React.FC<Header> = ({data, setData, startData, handleOpenModal, editedRow }) => {
+export const Header: React.FC<Header> = ({data, setData, startData, handleOpenModal, editedRow, searcherSaveRef }) => {
   const {handleOpenWordFile, backUpAndExit} = useElectronAPI()
-
+  
   
 
   return (
     <>
       {!editedRow ? (
       <div className='d-flex position-fixed' style={{width: '100vw', zIndex: 10, backgroundColor: 'white', padding: "0 10px "}}>
-        <Searcher data={data} setData={setData} startData={startData.current ?? []} />
+        <Searcher data={data} setData={setData} startData={startData.current ?? []} searcherSaveRef={searcherSaveRef} />
         <button className="btn btn-primary mb-3 mt-1" style={{height: "40px", marginLeft: "10px "}} onClick={handleOpenModal}>
           Режим экспорта
         </button>

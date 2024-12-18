@@ -17,6 +17,8 @@ const Table: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [scrollPosition, setScrollPosition] = useState<number | null>(null)
 
+  const searcherSaveRef = useRef<string>('')
+
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   
@@ -78,7 +80,7 @@ const Table: React.FC = () => {
 
   return (
     <div className=''>
-      <Header data={data} setData={setData} startData={startData}handleOpenModal={handleOpenModal} editedRow={editedRow}  />
+      <Header data={data} setData={setData} startData={startData} handleOpenModal={handleOpenModal} editedRow={editedRow} searcherSaveRef={searcherSaveRef}  />
       
       <table className="table table-light table-striped table-hover table-bordered" style={{position: 'relative', top: "50px"}}>
         <thead>
